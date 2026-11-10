@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getJson } from '../api/client.js';
 
-type Props = { title: string; description: string; endpoint: string; dataKey: string };
+type Props = { title: string; description: string; endpoint: string; dataKey: string; emptyMessage?: string };
 type RecordData = Record<string, unknown>;
 
-export function CapabilityCard({ title, description, endpoint, dataKey }: Props) {
+export function CapabilityCard({ title, description, endpoint, dataKey, emptyMessage }: Props) {
   const [items, setItems] = useState<RecordData[] | null>(null);
   const [hasError, setHasError] = useState(false);
 
@@ -25,7 +25,7 @@ export function CapabilityCard({ title, description, endpoint, dataKey }: Props)
     <p>{description}</p>
     {items === null && !hasError && <p role="status">Loading {title.toLowerCase()}...</p>}
     {hasError && <p role="alert">Unable to load {title.toLowerCase()}.</p>}
-    {items?.length === 0 && <p>No {title.toLowerCase()} available.</p>}
+    {items?.length === 0 && <p>{emptyMessage ?? `No ${title.toLowerCase()} available.`}</p>}
     {items && items.length > 0 && <ul>
       {items.map((item, index) => <li key={index}>
         {Object.entries(item)
